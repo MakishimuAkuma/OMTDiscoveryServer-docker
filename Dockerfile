@@ -7,9 +7,9 @@ WORKDIR /build
 ADD https://github.com/openmediatransport/OMTDiscoveryServer.git ./OMTDiscoveryServer
 
 RUN case "$TARGETARCH" in \
-        "amd64") dotnet publish ../OMTDiscoveryServer.sln --os linux -a musl-x64 -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
-        "arm") dotnet publish ../OMTDiscoveryServer.sln --os linux -a musl-arm -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
-        "arm64") dotnet publish ../OMTDiscoveryServer.sln --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
+        "amd64") dotnet publish ./OMTDiscoveryServer.sln --os linux -a musl-x64 -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
+        "arm") dotnet publish ./OMTDiscoveryServer.sln --os linux -a musl-arm -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
+        "arm64") dotnet publish ./OMTDiscoveryServer.sln --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true --self-contained true -o /build/dist ;; \
     esac
 
 FROM docker.io/busybox:stable
