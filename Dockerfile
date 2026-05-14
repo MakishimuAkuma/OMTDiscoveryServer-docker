@@ -15,9 +15,9 @@ RUN sed -i 's|<TargetFrameworks>.*<\/TargetFrameworks>|<TargetFrameworks>net8.0<
     sed -i '13,15c\    <ProjectReference Include="..\\libomtnet\\libomtnet.csproj" />' ./OMTDiscoveryServer/OMTDiscoveryServer.csproj
 
 RUN case "$TARGETPLATFORM" in \
-        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
+        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishAot=true -o /build/dist ;; \
         "linux/arm/v7") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm -c Release -p:PublishSingleFile=true -p:PublishAot=false --self-contained true -o /build/dist ;; \
-        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
+        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishAot=true -o /build/dist ;; \
     esac
 
 FROM docker.io/busybox:stable
