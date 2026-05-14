@@ -16,7 +16,7 @@ RUN case "$TARGETPLATFORM" in \
         "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true -p:PublishAot=false --self-contained true -o /build/dist ;; \
     esac
 
-FROM docker.io/busybox:stable
+FROM docker.io/busybox:stable-musl
 
 WORKDIR /app
 
