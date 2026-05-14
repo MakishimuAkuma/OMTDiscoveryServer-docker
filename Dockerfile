@@ -17,7 +17,7 @@ FROM docker.io/busybox:stable
 
 WORKDIR /app
 
-COPY --from=build /build/dist /app
+COPY --from=build /build/dist/OMTDiscoveryServer .
 
 RUN chmod +x ./OMTDiscoveryServer
 
