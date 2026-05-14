@@ -4,12 +4,23 @@ ARG TARGETPLATFORM
 
 WORKDIR /build
 
+ADD https://github.com/openmediatransport/libomtnet.git ./libomtnet
 ADD https://github.com/openmediatransport/OMTDiscoveryServer.git ./OMTDiscoveryServer
 
+RUN sed -i 's|<TargetFrameworks>|<TargetFrameworks>net8.0;|g' ./libomtnet/libomtnet.csproj && \
+    sed -i '/<ItemGroup>/,/<\/ItemGroup>/ {\
+      /<Reference Include="libomtnet">/,/<\/Reference>/ {\
+        s|<Reference Include="libomtnet">.*<\/Reference>|<ProjectReference Include="..\\libomtnet\\libomtnet.csproj" />|;\
+        /<Reference/d;\
+        /HintPath/d;\
+        /<\/Reference>/d;\
+      }\
+    }' ./OMTDiscoveryServer/OMTDiscoveryServer.csproj
+
 RUN case "$TARGETPLATFORM" in \
-        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.sln --os linux -a musl-x64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
-        "linux/arm/v7") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.sln --os linux -a musl-arm -c Release -p:PublishSingleFile=true -p:PublishAot=false --self-contained true -o /build/dist ;; \
-        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.sln --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
+        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
+        "linux/arm/v7") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm -c Release -p:PublishSingleFile=true -p:PublishAot=false --self-contained true -o /build/dist ;; \
+        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
     esac
 
 FROM docker.io/busybox:stable
