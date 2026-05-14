@@ -7,15 +7,8 @@ WORKDIR /build
 ADD https://github.com/openmediatransport/libomtnet.git ./libomtnet
 ADD https://github.com/openmediatransport/OMTDiscoveryServer.git ./OMTDiscoveryServer
 
-RUN sed -i 's|<TargetFrameworks>|<TargetFrameworks>net8.0;|g' ./libomtnet/libomtnet.csproj && \
-    sed -i '/<ItemGroup>/,/<\/ItemGroup>/ {\
-      /<Reference Include="libomtnet">/,/<\/Reference>/ {\
-        s|<Reference Include="libomtnet">.*<\/Reference>|<ProjectReference Include="..\\libomtnet\\libomtnet.csproj" />|;\
-        /<Reference/d;\
-        /HintPath/d;\
-        /<\/Reference>/d;\
-      }\
-    }' ./OMTDiscoveryServer/OMTDiscoveryServer.csproj
+RUN sed -i 's|<TargetFrameworks>.*<\/TargetFrameworks>|<TargetFrameworks>net8.0;netstandard2.0;net40<\/TargetFrameworks>|g' ./libomtnet/libomtnet.csproj && \
+    sed -i '13,15c\    <ProjectReference Include="..\\libomtnet\\libomtnet.csproj" />' ./OMTDiscoveryServer/OMTDiscoveryServer.csproj
 
 RUN case "$TARGETPLATFORM" in \
         "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishSingleFile=true -p:PublishAot=true --self-contained true -o /build/dist ;; \
