@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget xz-utils &
     tar -xf zig-x86_64-linux-0.16.0.tar.xz && \
     mv zig-x86_64-linux-0.16.0 /opt/zig && \
     ln -s /opt/zig/zig /usr/bin/zig && \
+    ln -s /opt/zig/zig /usr/bin/clang && \
     rm zig-x86_64-linux-0.16.0.tar.xz
 
 ADD https://github.com/openmediatransport/libomtnet.git ./libomtnet
@@ -18,9 +19,9 @@ RUN sed -i 's|<TargetFrameworks>.*<\/TargetFrameworks>|<TargetFrameworks>net8.0<
     sed -i '13,15c\    <ProjectReference Include="..\\libomtnet\\libomtnet.csproj" />' ./OMTDiscoveryServer/OMTDiscoveryServer.csproj
 
 RUN case "$TARGETPLATFORM" in \
-        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishAot=true -o /build/dist ;; \
+        "linux/amd64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-x64 -c Release -p:PublishAot=true -p:CppLinkerName=zig -p:ObjCopyName=zig -p:TrimMode=copy -o /build/dist ;; \
         "linux/arm/v7") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm -c Release -p:PublishSingleFile=true -p:PublishAot=false --self-contained true -o /build/dist ;; \
-        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishAot=true -o /build/dist ;; \
+        "linux/arm64") dotnet publish ./OMTDiscoveryServer/OMTDiscoveryServer.csproj --os linux -a musl-arm64 -c Release -p:PublishAot=true -p:CppLinkerName=zig -p:ObjCopyName=zig -p:TrimMode=copy -o /build/dist ;; \
     esac
 
 FROM docker.io/busybox:stable
