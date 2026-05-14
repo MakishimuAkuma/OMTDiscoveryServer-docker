@@ -5,11 +5,11 @@ ARG TARGETPLATFORM
 WORKDIR /build
 
 RUN apt-get update && apt-get install -y --no-install-recommends wget xz-utils && \
-    wget ziglang.org && \
-    tar -xf zig-linux-x86_64-0.11.0.tar.xz && \
-    mv zig-linux-x86_64-0.11.0 /opt/zig && \
+    wget https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz && \
+    tar -xf zig-x86_64-linux-0.16.0.tar.xz && \
+    mv zig-x86_64-linux-0.16.0 /opt/zig && \
     ln -s /opt/zig/zig /usr/bin/zig && \
-    rm zig-linux-x86_64-0.11.0.tar.xz
+    rm zig-x86_64-linux-0.16.0.tar.xz
 
 ADD https://github.com/openmediatransport/libomtnet.git ./libomtnet
 ADD https://github.com/openmediatransport/OMTDiscoveryServer.git ./OMTDiscoveryServer
