@@ -4,6 +4,10 @@ ARG TARGETPLATFORM
 
 WORKDIR /build
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    clang \
+    zlib1g-dev
+
 ADD https://github.com/openmediatransport/libomtnet.git ./libomtnet
 ADD https://github.com/openmediatransport/OMTDiscoveryServer.git ./OMTDiscoveryServer
 
